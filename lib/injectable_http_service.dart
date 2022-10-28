@@ -1,4 +1,4 @@
-library http_service;
+library injectable_http_service;
 
 export 'src/contracts/http_service.dart';
 export 'src/http_service_impl.dart';

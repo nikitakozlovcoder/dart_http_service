@@ -1,5 +1,5 @@
-name: http_service
-description: A starting point for Dart libraries or applications.
+name: injectable_http_service
+description: Simple http service to use with injectable.
 version: 1.0.0
 repository: https://github.com/nikitakozlovcoder/dart_http_service
 

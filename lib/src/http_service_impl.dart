@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:http_service/http_service.dart';
+import '../injectable_http_service.dart';
+
 
 class HttpServiceImpl implements HttpService {
 
