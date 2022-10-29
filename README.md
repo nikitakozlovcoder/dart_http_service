@@ -2,12 +2,31 @@
 
 
 ```dart
-const http = HttpServiceImpl();
+const http = JsonHttpServiceImpl();
 
 final myModel = await http.get<MyModel>('example.com', MyModel.fromJson);
+
+await http.post('example.com', MyModel.fromJson, body: JsonEncode(model.toJson()));
 ```
 
-or for DI with injectable package:
+You can use body serializers:
+
+```dart
+final http = JsonHttpServiceImpl(defaultBodySerializer: jsonBodySerializer);
+
+final myResp =
+    http.post('example.com', MyResp.ftomJson(), body: myModel.toJson());
+```
+also you can pass serializer as a method argument to override default serializer (or to disable it at all)
+
+```dart
+final http = JsonHttpServiceImpl(defaultBodySerializer: jsonBodySerializer);
+
+final myResp =
+    http.post('example.com', MyResp.ftomJson(), body: muModel.toJson(), bodySerializer: noOpBodySerializer);
+```
+
+This package was designed to work well with injectable package:
 
 ```dart
 @module  
@@ -15,8 +34,18 @@ abstract class RegisterModule {
   @Injectable(as: HttpService<JsonSource>)
   JsonHttpServiceImpl get httpService;  
 }  
-
 ```
+
+also you can specify default body serializer
+
+```dart
+@module  
+abstract class RegisterModule {  
+  @Injectable(as: HttpService<JsonSource>)
+  JsonHttpServiceImpl get httpService => JsonHttpServiceImpl(defaultBodySerializer: jsonBodySerializer);  
+}  
+```
+
 Also you can notice that injectable gives you an opprotunity to register HttpService with source type provided, so, you can have multiple http services for different responce types.
 
 You can even extend it:
