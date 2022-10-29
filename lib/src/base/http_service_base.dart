@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:injectable_http_service/injectable_http_service.dart';
 import 'package:http/http.dart' as http;
+import '../types/converter.type.dart';
 
 abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   @override
-  Future<T> get<T>(String url, Converter<T, TSource> converter,
+  Future<T> get<T>(String url, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.get, null, headers);
     var response = await http.get(req.uri, headers: req.headers);
@@ -16,7 +15,7 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<List<T>> getList<T>(String url, Converter<T, TSource> converter,
+  Future<List<T>> getList<T>(String url, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.get, null, headers);
     var response = await http.get(req.uri, headers: req.headers);
@@ -26,7 +25,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<T> delete<T>(String url, Object? body, Converter<T, TSource> converter,
+  Future<T> delete<T>(
+      String url, Object? body, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.delete, body, headers);
     var response =
@@ -38,7 +38,7 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
 
   @override
   Future<List<T>> deleteList<T>(
-      String url, Object? body, Converter<T, TSource> converter,
+      String url, Object? body, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.delete, body, headers);
     var response =
@@ -49,7 +49,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<T> post<T>(String url, Object? body, Converter<T, TSource> converter,
+  Future<T> post<T>(
+      String url, Object? body, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.post, body, headers);
     var response =
@@ -61,7 +62,7 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
 
   @override
   Future<List<T>> postList<T>(
-      String url, Object? body, Converter<T, TSource> converter,
+      String url, Object? body, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.post, body, headers);
     var response =
@@ -72,7 +73,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<T> put<T>(String url, Object? body, Converter<T, TSource> converter,
+  Future<T> put<T>(
+      String url, Object? body, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.put, body, headers);
     var response =
@@ -84,7 +86,7 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
 
   @override
   Future<List<T>> putList<T>(
-      String url, Object? body, Converter<T, TSource> converter,
+      String url, Object? body, HttpConverter<T, TSource> converter,
       [Map<String, String>? headers]) async {
     final req = await beforeHook(url, HttpVerb.put, body, headers);
     var response =
@@ -106,14 +108,15 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   TSource parseResult(http.Response response);
   List<TSource> parseListResult(http.Response response);
 
-  T _buildResult<T>(http.Response response, Converter<T, TSource> converter) {
+  T _buildResult<T>(
+      http.Response response, HttpConverter<T, TSource> converter) {
     final data = parseResult(response);
 
     return converter.call(data);
   }
 
   List<T> _buildListResult<T>(
-      http.Response response, Converter<T, TSource> converter) {
+      http.Response response, HttpConverter<T, TSource> converter) {
     final data = parseListResult(response);
     final list =
         List<T>.generate(data.length, (index) => converter.call(data[index]));

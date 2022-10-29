@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:injectable_http_service/src/base/http_service_base.dart';
+import 'base/http_service_base.dart';
+import 'types/json_source.type.dart';
 
-class JsonHttpServiceImpl extends HttpServiceBase<Map<String, dynamic>> {
+class JsonHttpServiceImpl extends HttpServiceBase<JsonSource> {
   @override
   List<Map<String, dynamic>> parseListResult(Response response) {
     return jsonDecode(response.body).cast<Map<String, dynamic>>();

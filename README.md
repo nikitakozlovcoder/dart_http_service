@@ -45,7 +45,7 @@ To support any responce formats you can extend HttpServiceBase<TSource> class:
 
 
 ```dart
-class JsonHttpServiceImpl extends HttpServiceBase<Map<String, dynamic>> {
+class JsonHttpServiceImpl extends HttpServiceBase<JsonSource> {
   @override
   List<Map<String, dynamic>> parseListResult(Response response) {
     return jsonDecode(response.body);
