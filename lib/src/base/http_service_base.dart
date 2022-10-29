@@ -6,7 +6,7 @@ import '../types/http_converter.type.dart';
 abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   @override
   Future<T> get<T>(String url, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+      {Map<String, String>? headers}) async {
     final req = await beforeHook(url, HttpVerb.get, null, headers);
     var response = await http.get(req.uri, headers: req.headers);
     response = await afterHook(response);
@@ -16,7 +16,7 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
 
   @override
   Future<List<T>> getList<T>(String url, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+      {Map<String, String>? headers}) async {
     final req = await beforeHook(url, HttpVerb.get, null, headers);
     var response = await http.get(req.uri, headers: req.headers);
     response = await afterHook(response);
@@ -25,9 +25,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<T> delete<T>(
-      String url, Object? body, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+  Future<T> delete<T>(String url, HttpConverter<T, TSource> converter,
+      {Map<String, String>? headers, Object? body}) async {
     final req = await beforeHook(url, HttpVerb.delete, body, headers);
     var response =
         await http.delete(req.uri, body: req.body, headers: req.headers);
@@ -37,9 +36,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<List<T>> deleteList<T>(
-      String url, Object? body, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+  Future<List<T>> deleteList<T>(String url, HttpConverter<T, TSource> converter,
+      {Map<String, String>? headers, Object? body}) async {
     final req = await beforeHook(url, HttpVerb.delete, body, headers);
     var response =
         await http.delete(req.uri, body: req.body, headers: req.headers);
@@ -49,9 +47,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<T> post<T>(
-      String url, Object? body, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+  Future<T> post<T>(String url, HttpConverter<T, TSource> converter,
+      {Map<String, String>? headers, Object? body}) async {
     final req = await beforeHook(url, HttpVerb.post, body, headers);
     var response =
         await http.post(req.uri, body: req.body, headers: req.headers);
@@ -61,9 +58,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<List<T>> postList<T>(
-      String url, Object? body, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+  Future<List<T>> postList<T>(String url, HttpConverter<T, TSource> converter,
+      {Map<String, String>? headers, Object? body}) async {
     final req = await beforeHook(url, HttpVerb.post, body, headers);
     var response =
         await http.post(req.uri, body: req.body, headers: req.headers);
@@ -73,9 +69,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<T> put<T>(
-      String url, Object? body, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+  Future<T> put<T>(String url, HttpConverter<T, TSource> converter,
+      {Map<String, String>? headers, Object? body}) async {
     final req = await beforeHook(url, HttpVerb.put, body, headers);
     var response =
         await http.put(req.uri, body: req.body, headers: req.headers);
@@ -85,9 +80,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   @override
-  Future<List<T>> putList<T>(
-      String url, Object? body, HttpConverter<T, TSource> converter,
-      [Map<String, String>? headers]) async {
+  Future<List<T>> putList<T>(String url, HttpConverter<T, TSource> converter,
+      {Map<String, String>? headers, Object? body}) async {
     final req = await beforeHook(url, HttpVerb.put, body, headers);
     var response =
         await http.put(req.uri, body: req.body, headers: req.headers);
