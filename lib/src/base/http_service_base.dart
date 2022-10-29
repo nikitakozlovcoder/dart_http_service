@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:injectable_http_service/injectable_http_service.dart';
 import 'package:http/http.dart' as http;
-import '../types/converter.type.dart';
+import '../types/http_converter.type.dart';
 
 abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   @override

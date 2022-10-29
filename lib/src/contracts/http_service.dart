@@ -1,4 +1,4 @@
-import '../types/converter.type.dart';
+import '../types/http_converter.type.dart';
 
 abstract class HttpService<TSource> {
   Future<T> get<T>(String url, HttpConverter<T, TSource> converter,
