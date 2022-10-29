@@ -1,12 +1,10 @@
 ## Usage
 
-
 ```dart
 const http = JsonHttpServiceImpl();
 
 final myModel = await http.get<MyModel>('example.com', MyModel.fromJson);
-
-await http.post('example.com', MyModel.fromJson, body: JsonEncode(model.toJson()));
+final myResp = await http.post('example.com', MyModel.fromJson, body: JsonEncode(model.toJson()));
 ```
 
 You can use body serializers:
@@ -14,16 +12,14 @@ You can use body serializers:
 ```dart
 final http = JsonHttpServiceImpl(defaultBodySerializer: jsonBodySerializer);
 
-final myResp =
-    http.post('example.com', MyResp.ftomJson(), body: myModel.toJson());
+final myResp = http.post('example.com', MyResp.ftomJson(), body: myModel.toJson());
 ```
 also you can pass serializer as a method argument to override default serializer (or to disable it at all)
 
 ```dart
 final http = JsonHttpServiceImpl(defaultBodySerializer: jsonBodySerializer);
 
-final myResp =
-    http.post('example.com', MyResp.ftomJson(), body: muModel.toJson(), bodySerializer: noOpBodySerializer);
+final myResp = http.post('example.com', MyResp.ftomJson(), body: JsonEncode(myModel.toJson()), bodySerializer: noOpBodySerializer);
 ```
 
 This package was designed to work well with injectable package:
