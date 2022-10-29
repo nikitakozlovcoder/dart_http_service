@@ -5,7 +5,7 @@ import 'package:injectable_http_service/src/base/http_service_base.dart';
 class JsonHttpServiceImpl extends HttpServiceBase<Map<String, dynamic>> {
   @override
   List<Map<String, dynamic>> parseListResult(Response response) {
-    return jsonDecode(response.body);
+    return jsonDecode(response.body).cast<Map<String, dynamic>>();
   }
 
   @override
