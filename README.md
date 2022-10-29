@@ -13,7 +13,7 @@ or for DI with injectable package:
 @module  
 abstract class RegisterModule {  
   @Injectable(as: HttpService)
-  HttpServiceImpl get httpService;  
+  JsonHttpServiceImpl get httpService;  
 }  
 
 ```
