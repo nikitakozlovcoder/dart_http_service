@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   final BodySerializer defaultBodySerializer;
 
-  HttpServiceBase({this.defaultBodySerializer = noOpBodySerializer});
+  const HttpServiceBase({this.defaultBodySerializer = noOpBodySerializer});
 
   @override
   Future<T> get<T>(String url, HttpConverter<T, TSource> converter,
