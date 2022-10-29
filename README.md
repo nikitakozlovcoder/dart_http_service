@@ -56,8 +56,8 @@ You can even extend it:
 class OpenWeatherHttpServiceImpl extends JsonHttpServiceImpl {
 
   @override
-  FutureOr<AppHttpRequest> beforeHook(String url, HttpVerb verb,  Object? body, Map<String, String>? headers) async {
-    final req = await super.beforeHook(url, verb, body, headers);
+  FutureOr<AppHttpRequest> beforeHook(String url, HttpVerb verb, Object? body, Map<String, String>? headers, BodySerializer bodySerializer) async {
+    final req = await super.beforeHook(url, verb, body, headers, bodySerializer);
     final uri = req.uri.replace(queryParameters: {...req.uri.queryParameters}
       ..putIfAbsent('appid', () => '********'));
       

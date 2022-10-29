@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'package:injectable_http_service/injectable_http_service.dart';
 import 'package:http/http.dart' as http;
-import '../types/body_serializer.type.dart';
 
 abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
-  final BodySerializer? defaultBodySerializer;
+  final BodySerializer defaultBodySerializer;
 
-  HttpServiceBase({this.defaultBodySerializer});
+  HttpServiceBase({this.defaultBodySerializer = noOpBodySerializer});
 
   @override
   Future<T> get<T>(String url, HttpConverter<T, TSource> converter,
       {Map<String, String>? headers}) async {
-    final req = await beforeHook(url, HttpVerb.get, null, headers, null);
+    final req =
+        await beforeHook(url, HttpVerb.get, null, headers, noOpBodySerializer);
     var response = await http.get(req.uri, headers: req.headers);
     response = await afterHook(response);
 
@@ -21,7 +21,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   @override
   Future<List<T>> getList<T>(String url, HttpConverter<T, TSource> converter,
       {Map<String, String>? headers}) async {
-    final req = await beforeHook(url, HttpVerb.get, null, headers, null);
+    final req =
+        await beforeHook(url, HttpVerb.get, null, headers, noOpBodySerializer);
     var response = await http.get(req.uri, headers: req.headers);
     response = await afterHook(response);
 
@@ -33,8 +34,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
       {Map<String, String>? headers,
       Object? body,
       BodySerializer? bodySerializer}) async {
-    final req =
-        await beforeHook(url, HttpVerb.delete, body, headers, bodySerializer);
+    final req = await beforeHook(
+        url, HttpVerb.delete, body, headers, chooseSerializer(bodySerializer));
     var response =
         await http.delete(req.uri, body: req.body, headers: req.headers);
     response = await afterHook(response);
@@ -47,8 +48,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
       {Map<String, String>? headers,
       Object? body,
       BodySerializer? bodySerializer}) async {
-    final req =
-        await beforeHook(url, HttpVerb.delete, body, headers, bodySerializer);
+    final req = await beforeHook(
+        url, HttpVerb.delete, body, headers, chooseSerializer(bodySerializer));
     var response =
         await http.delete(req.uri, body: req.body, headers: req.headers);
     response = await afterHook(response);
@@ -61,8 +62,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
       {Map<String, String>? headers,
       Object? body,
       BodySerializer? bodySerializer}) async {
-    final req =
-        await beforeHook(url, HttpVerb.post, body, headers, bodySerializer);
+    final req = await beforeHook(
+        url, HttpVerb.post, body, headers, chooseSerializer(bodySerializer));
     var response =
         await http.post(req.uri, body: req.body, headers: req.headers);
     response = await afterHook(response);
@@ -75,8 +76,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
       {Map<String, String>? headers,
       Object? body,
       BodySerializer? bodySerializer}) async {
-    final req =
-        await beforeHook(url, HttpVerb.post, body, headers, bodySerializer);
+    final req = await beforeHook(
+        url, HttpVerb.post, body, headers, chooseSerializer(bodySerializer));
     var response =
         await http.post(req.uri, body: req.body, headers: req.headers);
     response = await afterHook(response);
@@ -89,8 +90,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
       {Map<String, String>? headers,
       Object? body,
       BodySerializer? bodySerializer}) async {
-    final req =
-        await beforeHook(url, HttpVerb.put, body, headers, bodySerializer);
+    final req = await beforeHook(
+        url, HttpVerb.put, body, headers, chooseSerializer(bodySerializer));
     var response =
         await http.put(req.uri, body: req.body, headers: req.headers);
     response = await afterHook(response);
@@ -103,8 +104,8 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
       {Map<String, String>? headers,
       Object? body,
       BodySerializer? bodySerializer}) async {
-    final req =
-        await beforeHook(url, HttpVerb.put, body, headers, bodySerializer);
+    final req = await beforeHook(
+        url, HttpVerb.put, body, headers, chooseSerializer(bodySerializer));
     var response =
         await http.put(req.uri, body: req.body, headers: req.headers);
     response = await afterHook(response);
@@ -113,15 +114,9 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
   }
 
   FutureOr<AppHttpRequest> beforeHook(String url, HttpVerb verb, Object? body,
-      Map<String, String>? headers, BodySerializer? bodySerializer) async {
+      Map<String, String>? headers, BodySerializer bodySerializer) async {
     if (body != null) {
-      if (bodySerializer != null) {
-        body = bodySerializer.call(body);
-      } else {
-        body = defaultBodySerializer != null
-            ? defaultBodySerializer!.call(body)
-            : body;
-      }
+      body = bodySerializer.call(body);
     }
 
     return AppHttpRequest(uri: Uri.parse(url), body: body, headers: headers);
@@ -133,6 +128,10 @@ abstract class HttpServiceBase<TSource> implements HttpService<TSource> {
 
   TSource parseResult(http.Response response);
   List<TSource> parseListResult(http.Response response);
+
+  BodySerializer chooseSerializer(BodySerializer? serializer) {
+    return serializer ?? defaultBodySerializer;
+  }
 
   T _buildResult<T>(
       http.Response response, HttpConverter<T, TSource> converter) {
