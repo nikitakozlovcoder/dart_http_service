@@ -4,7 +4,7 @@
 ```dart
 const http = HttpServiceImpl();
 
-final myModel = http.get<MyModel>('example.com', MyModel.fromJson);
+final myModel = await http.get<MyModel>('example.com', MyModel.fromJson);
 ```
 
 or for DI with injectable package:
@@ -21,10 +21,9 @@ abstract class RegisterModule {
 You can even extend it:
 
 ```dart
-
 @named 
 @Injectable(as: HttpService)
-class OpenWeatherHttpServiceImpl extends HttpServiceImpl {
+class OpenWeatherHttpServiceImpl extends JsonHttpServiceImpl {
 
   @override
   FutureOr<AppHttpRequest> beforeHook(String url, HttpVerb verb,  Object? body, Map<String, String>? headers) async {
@@ -42,3 +41,19 @@ class OpenWeatherHttpServiceImpl extends HttpServiceImpl {
 
 ```
 
+To support any responce formats you can extend HttpServiceBase<TSource> class:
+
+
+```dart
+class JsonHttpServiceImpl extends HttpServiceBase<Map<String, dynamic>> {
+  @override
+  List<Map<String, dynamic>> parseListResult(Response response) {
+    return jsonDecode(response.body);
+  }
+
+  @override
+  Map<String, dynamic> parseResult(Response response) {
+    return jsonDecode(response.body);
+  }
+}
+```
