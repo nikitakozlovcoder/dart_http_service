@@ -1,8 +1,5 @@
 library injectable_http_service;
 
-import 'package:injectable_http_service/src/json_http_service_impl.dart';
-import 'package:injectable_http_service/src/serializers/json_body_serializer.dart';
-
 export 'src/contracts/http_service.dart';
 export 'src/base/http_service_base.dart';
 export 'src/json_http_service_impl.dart';

@@ -4,7 +4,7 @@
 const http = JsonHttpServiceImpl();
 
 final myModel = await http.get<MyModel>('example.com', MyModel.fromJson);
-final myResp = await http.post('example.com', MyModel.fromJson, body: JsonEncode(model.toJson()));
+final myResp = await http.post<MyResp>('example.com', MyResp.fromJson, body: JsonEncode(model.toJson()));
 ```
 
 You can use body serializers:
@@ -12,7 +12,7 @@ You can use body serializers:
 ```dart
 final http = JsonHttpServiceImpl(defaultBodySerializer: jsonBodySerializer);
 
-final myResp = http.post('example.com', MyResp.fromJson, body: myModel.toJson());
+final myResp = http.post<MyResp>('example.com', MyResp.fromJson, body: myModel.toJson());
 ```
 also you can pass serializer as a method argument to override default serializer (or to disable it at all)
 
